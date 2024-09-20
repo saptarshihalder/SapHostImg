@@ -125,7 +125,7 @@
         <h1>SapHostImg</h1>
         <p>Your Simple Image Hosting Solution</p>
     </header>
-    
+
     <form id="uploadForm">
         <input type="file" id="imageInput" accept="image/*" required>
         <button type="submit" id="uploadButton">Upload</button>
@@ -159,14 +159,14 @@
             const formData = new FormData();
             formData.append('file', file);
 
-            fetch('https://imgdrop.io/upload', {
+            fetch('https://file.io/', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success && data.data && data.data.file) {
-                    const imageUrl = data.data.file.url.short;
+                if (data.success && data.link) {
+                    const imageUrl = data.link;
                     saveImage(imageUrl);
                     addImageToGallery(imageUrl);
                     uploadForm.reset();
