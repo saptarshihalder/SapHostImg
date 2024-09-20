@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SapHostImg - Your Image Hosting Solution</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            color: #2d3436;
+        }
+        header {
+            background-color: #0984e3;
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            margin: 5px 0 0;
+            font-size: 1.2em;
+            color: #dfe6e9;
+        }
+        #uploadForm {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #imageInput {
+            flex-grow: 1;
+            margin-right: 15px;
+            padding: 10px;
+            border: 2px solid #dfe6e9;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #uploadButton {
+            background-color: #0984e3;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        #uploadButton:hover {
+            background-color: #74b9ff;
+        }
+        #imageGallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 0 30px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .image-container {
+            position: relative;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .image-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .action-btn {
+            background-color: #dfe6e9;
+            color: #2d3436;
+            border: none;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .action-btn:hover {
+            background-color: #b2bec3;
+        }
+        .image-link {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 8px;
+            border: 1px solid #dfe6e9;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #2d3436;
+            background-color: #f1f2f6;
+        }
+        footer {
+            background-color: #dfe6e9;
+            text-align: center;
+            padding: 15px;
+            margin-top: 50px;
+        }
+        footer p {
+            margin: 0;
+            color: #636e72;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SapHostImg</h1>
+        <p>Your Simple Image Hosting Solution</p>
+    </header>
+
+    <form id="uploadForm">
+        <input type="file" id="imageInput" accept="image/*" required>
+        <button type="submit" id="uploadButton">Upload</button>
+    </form>
+
+    <div id="imageGallery"></div>
+
+    <footer>
+        <p>Please No NSFW</p>
+    </footer>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const imageInput = document.getElementById('imageInput');
+        const imageGallery = document.getElementById('imageGallery');
+
+        // Load images from localStorage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadImages();
+        });
+
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const file = imageInput.files[0];
+            if (file) {
+                uploadImage(file);
+            }
+        });
+
+        function uploadImage(file) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64data = reader.result.split(',')[1];
+                const formData = new FormData();
+                formData.append('image', base64data);
+
+                fetch('https://api.imgur.com/3/image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Client-ID eeb29b86f1071b1',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const imageUrl = data.data.link;
+                        saveImage(imageUrl);
+                        addImageToGallery(imageUrl);
+                        uploadForm.reset();
+                    } else {
+                        alert('Failed to upload image.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    alert('Failed to upload image. Please try again.');
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveImage(imageUrl) {
+            let images = JSON.parse(localStorage.getItem('uploadedImages')) || [];
+            images.push(imageUrl);
+            localStorage.setItem('uploadedImages', JSON.stringify(images));
+        }
+
+        function loadImages() {
+            let images = JSON.parse(localStorage.getItem('uploadedImages')) || [];
+            images.forEach(imageUrl => {
+                addImageToGallery(imageUrl);
+            });
+        }
+
+        function addImageToGallery(imageUrl) {
+            const container = document.createElement('div');
+            container.className = 'image-container';
+
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = 'Uploaded image';
+
+            const actions = document.createElement('div');
+            actions.className = 'image-actions';
+
+            const linkInput = document.createElement('input');
+            linkInput.type = 'text';
+            linkInput.value = imageUrl;
+            linkInput.className = 'image-link';
+            linkInput.readOnly = true;
+
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = 'Copy Link';
+            copyBtn.className = 'action-btn';
+            copyBtn.onclick = () => copyLink(linkInput);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'Remove';
+            removeBtn.className = 'action-btn';
+            removeBtn.onclick = () => removeImage(container, imageUrl);
+
+            actions.appendChild(linkInput);
+            actions.appendChild(copyBtn);
+            actions.appendChild(removeBtn);
+
+            container.appendChild(img);
+            container.appendChild(actions);
+            imageGallery.insertBefore(container, imageGallery.firstChild);
+        }
+
+        function copyLink(inputElement) {
+            inputElement.select();
+            inputElement.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            alert('Image link copied to clipboard!');
+        }
+
+        function removeImage(container, imageUrl) {
+            // Remove from localStorage
+            let images = JSON.parse(localStorage.getItem('uploadedImages')) || [];
+            images = images.filter(url => url !== imageUrl);
+            localStorage.setItem('uploadedImages', JSON.stringify(images));
+
+            // Remove from DOM
+            container.remove();
+        }
+    </script>
+</body>
+</html>
