@@ -125,7 +125,7 @@
         <h1>SapHostImg</h1>
         <p>Your Simple Image Hosting Solution</p>
     </header>
-
+    
     <form id="uploadForm">
         <input type="file" id="imageInput" accept="image/*" required>
         <button type="submit" id="uploadButton">Upload</button>
@@ -134,7 +134,7 @@
     <div id="imageGallery"></div>
 
     <footer>
-        <p>Please No NSFW</p>
+        <p>&copy; 2023 SapHostImg. All rights reserved.</p>
     </footer>
 
     <script>
@@ -156,37 +156,28 @@
         });
 
         function uploadImage(file) {
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                const base64data = reader.result.split(',')[1];
-                const formData = new FormData();
-                formData.append('image', base64data);
+            const formData = new FormData();
+            formData.append('file', file);
 
-                fetch('https://api.imgur.com/3/image', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Client-ID eeb29b86f1071b1',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const imageUrl = data.data.link;
-                        saveImage(imageUrl);
-                        addImageToGallery(imageUrl);
-                        uploadForm.reset();
-                    } else {
-                        alert('Failed to upload image.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error uploading image:', error);
-                    alert('Failed to upload image. Please try again.');
-                });
-            };
-            reader.readAsDataURL(file);
+            fetch('https://imgdrop.io/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data && data.data.file) {
+                    const imageUrl = data.data.file.url.short;
+                    saveImage(imageUrl);
+                    addImageToGallery(imageUrl);
+                    uploadForm.reset();
+                } else {
+                    alert('Failed to upload image.');
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading image:', error);
+                alert('Failed to upload image. Please try again.');
+            });
         }
 
         function saveImage(imageUrl) {
