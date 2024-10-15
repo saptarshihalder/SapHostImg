@@ -1,250 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>SapHostImg - Your Image Hosting Solution</title>
-    <style>
-        /* Base Styles */
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f7f9fc;
-            margin: 0;
-            padding: 0;
-            color: #2d3436;
-        }
-        header {
-            background-color: #0984e3;
-            padding: 20px;
-            text-align: center;
-            color: #fff;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        header p {
-            margin: 5px 0 0;
-            font-size: 1.2em;
-            color: #dfe6e9;
-        }
-        #uploadForm {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 30px auto;
-            padding: 20px;
-            max-width: 600px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        #imageInput {
-            flex-grow: 1;
-            margin-right: 15px;
-            padding: 10px;
-            border: 2px solid #dfe6e9;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        #uploadButton {
-            background-color: #0984e3;
-            color: #fff;
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        #uploadButton:hover {
-            background-color: #74b9ff;
-        }
-        #imageGallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
-            padding: 0 30px 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .image-container {
-            position: relative;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .image-container img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .image-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-        }
-        .action-btn {
-            background-color: #dfe6e9;
-            color: #2d3436;
-            border: none;
-            padding: 8px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .action-btn:hover {
-            background-color: #b2bec3;
-        }
-        .image-link {
-            flex-grow: 1;
-            margin-right: 10px;
-            padding: 8px;
-            border: 1px solid #dfe6e9;
-            border-radius: 5px;
-            font-size: 14px;
-            color: #2d3436;
-            background-color: #f1f2f6;
-        }
-        footer {
-            background-color: #dfe6e9;
-            text-align: center;
-            padding: 15px;
-            margin-top: 50px;
-        }
-        footer p {
-            margin: 0;
-            color: #636e72;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SapHostImg</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://via.placeholder.com/32" type="image/png">
+  <style>
+    :root {
+      --bg-color: #1e1e1e;
+      --text-color: #d4d4d4;
+      --primary-color: #569cd6;
+      --secondary-color: #4ec9b0;
+      --accent-color: #ce9178;
+      --border-color: #3e3e3e;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Fira Code', monospace;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
+      background-color: var(--border-color);
+      color: var(--primary-color);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--primary-color);
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .logo span {
+      color: var(--secondary-color);
+    }
+    
+    main {
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--primary-color);
+    }
+    
+    .upload-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    #image-input {
+      display: none;
+    }
+    
+    .custom-file-upload, #display-button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-family: 'Fira Code', monospace;
+    }
+    
+    .custom-file-upload {
+      background-color: var(--primary-color);
+      color: var(--bg-color);
+      border: none;
+    }
+    
+    .custom-file-upload:hover {
+      background-color: #4a85ba;
+    }
+    
+    #display-button {
+      background-color: var(--secondary-color);
+      color: var(--bg-color);
+      border: none;
+    }
+    
+    #display-button:hover {
+      background-color: #3ea792;
+    }
+    
+    #result {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    
+    #data-url {
+      width: 100%;
+      height: 100px;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      resize: none;
+      margin-top: 1rem;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Fira Code', monospace;
+    }
+    
+    #uploaded-image {
+      max-width: 100%;
+      margin-top: 1.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+    
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+    
+    footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+    
+    footer a:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      main {
+        padding: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>SapHostImg</h1>
-        <p>Your Simple Image Hosting Solution</p>
-    </header>
+  <header>
+    <div class="container">
+      <div class="logo">Sap<span>Host</span>Img</div>
+    </div>
+  </header>
+  
+  <div class="container">
+    <main>
+      <h1>// Welcome to SapHostImg</h1>
+      <div class="upload-section">
+        <label for="image-input" class="custom-file-upload">
+          select_image()
+        </label>
+        <input type="file" id="image-input" accept="image/*">
+        <button id="display-button">get_image()</button>
+      </div>
+      <div id="result"></div>
+      <img id="uploaded-image" src="" alt="// Your image will appear here">
+    </main>
+  </div>
+  
+  <footer>
+    <div class="container">
+      <p>/* © 2023 SapHostImg. All rights reserved. */</p>
+      <p><a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a></p>
+    </div>
+  </footer>
+  
+  <script>
+    const imageInput = document.getElementById('image-input');
+    const displayButton = document.getElementById('display-button');
+    const resultDiv = document.getElementById('result');
+    const uploadedImage = document.getElementById('uploaded-image');
 
-    <form id="uploadForm">
-        <input type="file" id="imageInput" accept="image/*" required>
-        <button type="submit" id="uploadButton">Upload</button>
-    </form>
+    document.querySelector('.custom-file-upload').addEventListener('click', function() {
+      imageInput.click();
+    });
 
-    <div id="imageGallery"></div>
+    imageInput.addEventListener('change', function() {
+      if (imageInput.files && imageInput.files[0]) {
+        document.querySelector('.custom-file-upload').textContent = 'image_selected()';
+      }
+    });
 
-    <footer>
-        <p>&copy; 2023 SapHostImg. All rights reserved.</p>
-    </footer>
+    displayButton.addEventListener('click', function() {
+      if (imageInput.files && imageInput.files[0]) {
+        const file = imageInput.files[0];
 
-    <script>
-        const uploadForm = document.getElementById('uploadForm');
-        const imageInput = document.getElementById('imageInput');
-        const imageGallery = document.getElementById('imageGallery');
-
-        // Load images from localStorage on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadImages();
-        });
-
-        uploadForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const file = imageInput.files[0];
-            if (file) {
-                uploadImage(file);
-            }
-        });
-
-        function uploadImage(file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            fetch('https://file.io/', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.link) {
-                    const imageUrl = data.link;
-                    saveImage(imageUrl);
-                    addImageToGallery(imageUrl);
-                    uploadForm.reset();
-                } else {
-                    alert('Failed to upload image.');
-                }
-            })
-            .catch(error => {
-                console.error('Error uploading image:', error);
-                alert('Failed to upload image. Please try again.');
-            });
+        if (!file.type.startsWith('image/')) {
+          alert('Error: Invalid file type. Please select an image file.');
+          return;
         }
 
-        function saveImage(imageUrl) {
-            let images = JSON.parse(localStorage.getItem('uploadedImages')) || [];
-            images.push(imageUrl);
-            localStorage.setItem('uploadedImages', JSON.stringify(images));
-        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const dataUrl = e.target.result;
+          uploadedImage.src = dataUrl;
 
-        function loadImages() {
-            let images = JSON.parse(localStorage.getItem('uploadedImages')) || [];
-            images.forEach(imageUrl => {
-                addImageToGallery(imageUrl);
-            });
-        }
+          resultDiv.innerHTML = `
+            <p>// Image loaded successfully</p>
+            <p>// Data URL (click to copy):</p>
+            <textarea id="data-url" readonly>${dataUrl}</textarea>
+          `;
 
-        function addImageToGallery(imageUrl) {
-            const container = document.createElement('div');
-            container.className = 'image-container';
-
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = 'Uploaded image';
-
-            const actions = document.createElement('div');
-            actions.className = 'image-actions';
-
-            const linkInput = document.createElement('input');
-            linkInput.type = 'text';
-            linkInput.value = imageUrl;
-            linkInput.className = 'image-link';
-            linkInput.readOnly = true;
-
-            const copyBtn = document.createElement('button');
-            copyBtn.textContent = 'Copy Link';
-            copyBtn.className = 'action-btn';
-            copyBtn.onclick = () => copyLink(linkInput);
-
-            const removeBtn = document.createElement('button');
-            removeBtn.textContent = 'Remove';
-            removeBtn.className = 'action-btn';
-            removeBtn.onclick = () => removeImage(container, imageUrl);
-
-            actions.appendChild(linkInput);
-            actions.appendChild(copyBtn);
-            actions.appendChild(removeBtn);
-
-            container.appendChild(img);
-            container.appendChild(actions);
-            imageGallery.insertBefore(container, imageGallery.firstChild);
-        }
-
-        function copyLink(inputElement) {
-            inputElement.select();
-            inputElement.setSelectionRange(0, 99999); // For mobile devices
+          const dataUrlTextarea = document.getElementById('data-url');
+          dataUrlTextarea.addEventListener('click', function() {
+            dataUrlTextarea.select();
             document.execCommand('copy');
-            alert('Image link copied to clipboard!');
-        }
+            alert('Data URL copied to clipboard!');
+          });
+        };
+        reader.onerror = function() {
+          alert('Error: Failed to read file.');
+        };
 
-        function removeImage(container, imageUrl) {
-            // Remove from localStorage
-            let images = JSON.parse(localStorage.getItem('uploadedImages')) || [];
-            images = images.filter(url => url !== imageUrl);
-            localStorage.setItem('uploadedImages', JSON.stringify(images));
-
-            // Remove from DOM
-            container.remove();
-        }
-    </script>
+        reader.readAsDataURL(file);
+      } else {
+        alert('Error: No image file selected.');
+      }
+    });
+  </script>
 </body>
 </html>
